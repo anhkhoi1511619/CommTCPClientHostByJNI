@@ -1,0 +1,16 @@
+Comand LINUX
+
+Tao file library giua c vs JAVA
+gcc -shared -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -o libnative.so com_mycompany_app_App.c
+
+Edit file env cua LINUX
+source ~/.bashrc
+
+Test bien env 
+echo $JAVA_HOME
+
+Move file native from src/native to target/classes
+cp src/native/libnative.so target/classes/
+
+Run
+java -Djava.library.path=target/classes/ -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App

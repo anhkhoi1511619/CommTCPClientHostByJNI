@@ -18,34 +18,34 @@ JNIEXPORT jstring JNICALL Java_com_mycompany_app_App_sayHello
 /*
  * Class:     com_mycompany_app_App
  * Method:    connect
- * Signature: (Ljava/lang/String;I)Z
+ * Signature: (Ljava/lang/String;I)I
  */
-JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_connect
+JNIEXPORT jint JNICALL Java_com_mycompany_app_App_connect
   (JNIEnv *, jobject, jstring, jint);
 
 /*
  * Class:     com_mycompany_app_App
  * Method:    send
- * Signature: ([B)Z
+ * Signature: (I[B)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_send
-  (JNIEnv *, jobject, jbyteArray);
+  (JNIEnv *, jobject, jint, jbyteArray);
 
 /*
  * Class:     com_mycompany_app_App
  * Method:    receive
- * Signature: ()[B
+ * Signature: (I)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_mycompany_app_App
  * Method:    close
- * Signature: ()Z
+ * Signature: (I)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_close
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }

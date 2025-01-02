@@ -9,10 +9,10 @@ import java.util.concurrent.*;
  */
 public class App {
    public native String sayHello();
-   public native boolean connect(String IP, int port);
-   public native boolean send(byte[] data);
-   public native byte[] receive();
-   public native boolean close();
+   public native int connect(String address, int port);
+   public native boolean send(int fd, byte[] data);
+   public native byte[] receive(int fd);
+   public native boolean close(int fd);
    static {
        System.loadLibrary("native");
    }
@@ -24,7 +24,8 @@ public class App {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
 	Runnable task = () -> {
 		System.out.println("Receiving data....");
-  		byte[] byteArray = app.receive();
+                int fd = app.connect("/dev/pts/1", 1511619);
+  		byte[] byteArray = app.receive(fd);
 		System.out.println("Received data, serializing...."); 
 		StringBuilder hexString = new StringBuilder();
 		for (byte b : byteArray) {
@@ -32,6 +33,7 @@ public class App {
 		}
 		System.out.println("Serialized done....");
 		System.out.println("Data: "+hexString.toString());
+                app.close(fd);
 	};
 	scheduler.scheduleAtFixedRate (task, 1, 1, TimeUnit.SECONDS);
 

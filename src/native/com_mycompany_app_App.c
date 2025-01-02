@@ -1,7 +1,10 @@
 #include <jni.h>        
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>      
+#include <stdint.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>      
 #include "com_mycompany_app_App.h"   
 char* systemTest(); 
 // Implementation of the native method sayHello()
@@ -14,9 +17,16 @@ JNIEXPORT jstring JNICALL Java_com_mycompany_app_App_sayHello(JNIEnv *env, jobje
  * Method:    connect
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_connect
-  (JNIEnv *, jobject, jstring IP, jint port) {
-  return JNI_TRUE;
+JNIEXPORT jint JNICALL Java_com_mycompany_app_App_connect
+  (JNIEnv *env, jobject, jstring address, jint port) {
+  int fd = -1;
+  const char *addName = (*env)->GetStringUTFChars(env, address, NULL);
+  fd = open(addName, O_WRONLY |	O_NOCTTY | O_SYNC);
+  if (fd == -1) {
+    perror("Error opening port");
+    return -1;
+  }
+  return fd;
 }
 
 /*
@@ -25,7 +35,7 @@ JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_connect
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_send
-  (JNIEnv *, jobject, jbyteArray data) {
+  (JNIEnv *, jobject, jint,  jbyteArray data) {
   return JNI_TRUE;
 }
 
@@ -35,7 +45,7 @@ JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_send
  * Signature: ()[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
-  (JNIEnv *env, jobject){
+  (JNIEnv *env, jobject, jint fd){
       // Dữ liệu byte cần trả về
     //unsigned char data[] = {0x02, 0x00, 0x03, 0xFD, 0x90, 0x00, 0x00, 0x70, 0x03};
 
@@ -49,7 +59,14 @@ JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
     // Tạo jstring từ chuỗi hexadecimal
     //return (*env)->NewStringUTF(env, hexString);
             // Dữ liệu byte cần trả về
-    unsigned char data[] = {0x02, 0x00, 0x03, 0xFD, 0x90, 0x00, 0x00, 0x70, 0x03};
+    //unsigned char data[] = {0x02, 0x00, 0x03, 0xFD, 0x90, 0x1, 0x1, 0x70, 0x03};
+    unsigned char data[1024];
+    if(fd != -1) {
+	int n = read(fd, data, sizeof(data) - 1);
+	if (n > 0){
+	   data[n] = '\0';
+	}
+    } 
 
     // Tạo mảng jbyteArray với kích thước tương ứng
     jbyteArray byteArray = (*env)->NewByteArray(env, sizeof(data));
@@ -66,7 +83,8 @@ JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_close
-  (JNIEnv *, jobject) {
+  (JNIEnv *, jobject, jint fd) {
+  close(fd);
   return JNI_TRUE;
 }
 

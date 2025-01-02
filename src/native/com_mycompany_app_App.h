@@ -20,7 +20,7 @@ JNIEXPORT jstring JNICALL Java_com_mycompany_app_App_sayHello
  * Method:    connect
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_connect
+JNIEXPORT jint JNICALL Java_com_mycompany_app_App_connect
   (JNIEnv *, jobject, jstring, jint);
 
 /*
@@ -29,7 +29,7 @@ JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_connect
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_send
-  (JNIEnv *, jobject, jbyteArray);
+  (JNIEnv *, jobject,	jint, jbyteArray);
 
 /*
  * Class:     com_mycompany_app_App
@@ -37,7 +37,7 @@ JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_send
  * Signature: ()[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     com_mycompany_app_App
@@ -45,7 +45,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_mycompany_app_App_receive
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_com_mycompany_app_App_close
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }
